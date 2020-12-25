@@ -1,0 +1,7 @@
+Flask
+google-cloud-storage
+google-cloud-firestore
+google-cloud-vision
+python-dotenv
+gunicorn
+Flask-API
