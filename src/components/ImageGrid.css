@@ -1,0 +1,21 @@
+.ImageGrid {
+  margin: 0 auto;
+  text-align: left;
+  width: 80%;
+  margin-top: 30px;
+}
+
+.highlight{
+  border: solid blue;
+  border-width: 5px 5px;
+}
+
+.figure {
+  width: 500px;
+  height: 350px;
+}
+
+.figure-img {
+  width:100%;
+  height: 80%;
+}

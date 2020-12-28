@@ -31,7 +31,7 @@ def searchImageAttr():
     response = {}
 
     # Get attr parameter defining search string labels
-    attrInfo = request.args.getlist("attr")
+    attrInfo = request.args.getlist("attr[]")
 
     # Defining collections location
     photoFeedRef = firestore.Client().collection(os.environ.get("GOOGLE_COLLECTION"))
@@ -71,4 +71,18 @@ def searchImageSimilar():
     return jsonify(response)
 
 
+@searchImage_api.route('/imageAll', methods=['GET'])
+def searchImageAll():
+    # Build Response
+    response = {}
 
+    # Defining collections location
+    photoFeedRef = firestore.Client().collection(os.environ.get("GOOGLE_COLLECTION"))
+
+    # Query for all images
+    docs = photoFeedRef.stream()
+    response["images"] = []
+    for doc in docs:
+        response["images"].append(doc.to_dict())
+
+    return jsonify(response)

@@ -1,6 +1,29 @@
 .env
-photoFeed-ca4dd33dd1c1.json
-.DS_Store
+photoFeed-9a0161cbf8a8.json
 __pycache__
 venv
 .idea
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.eslintcache

@@ -1,6 +1,6 @@
 from flask import Flask
-from imageRepoAPI.addImage import addImage_api
-from imageRepoAPI.searchImage import searchImage_api
+from imageHelperAPI.addImage import addImage_api
+from imageHelperAPI.searchImage import searchImage_api
 from dotenv import load_dotenv
 import os
 
@@ -9,13 +9,13 @@ load_dotenv()
 
 # If `entrypoint` is not defined in app.yaml, App Engine will look for an app
 # called `app` in `main.py`.
-app = Flask(__name__)
+app = Flask(__name__, static_folder="build", static_url_path="/")
 
 
+# Entry point to serve built static file index.js (React)
 @app.route("/", methods=["GET"])
 def hello():
-    """ Return a friendly HTTP greeting. """
-    return "<h1> Arjun Mittal Repository API <h1>"
+    return app.send_static_file("index.html")
 
 
 # Set authentication for application

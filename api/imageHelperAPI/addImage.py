@@ -25,12 +25,13 @@ def addImage():
     # Add all files to DB
     response["images_added"] = []
     for img in imgToAdd:
-        response["images_added"].append({"name": img.filename, "status": addToDB(img)})
+        response["images_added"].append(addToDB(img))
 
     return jsonify(response)
 
 
 def addToDB(img):
+
     # Connect to DB
     bucket = storage.Client().bucket(os.environ.get("GOOGLE_STORAGE_BUCKET"))
     photoFeedRef = firestore.Client().collection(os.environ.get("GOOGLE_COLLECTION"))
@@ -46,30 +47,33 @@ def addToDB(img):
 
     # Checks whether a file is an image type
     if 'image' not in img.mimetype:
-        return "Please provide a valid image to upload"
+        return {"Error": "Please provide a valid image to upload"}
 
     # Write blob to Google Storage
     blob = bucket.blob(imageUUID)
     blob.upload_from_file(img)
+    blob.make_public()
 
     # Generate public URL and URI
-    publicURL = "https://storage.cloud.google.com/{0}/{1}".format(os.environ.get("GOOGLE_STORAGE_BUCKET"), imageUUID)
+    publicURL = "https://storage.googleapis.com/{0}/{1}".format(os.environ.get("GOOGLE_STORAGE_BUCKET"), imageUUID)
     imageURI = "gs://{0}/{1}".format(os.environ.get("GOOGLE_STORAGE_BUCKET"), imageUUID)
 
     # Generate image labels using Google Vision API
     labels = getLabels(imageURI)
 
-    # Store reference and label information of image in Google Firestore
-    photoFeedRef.document(imageUUID).set({
+    imgInf = {
         'name': img.filename,
         'url': publicURL,
         'uri': imageURI,
         'key': imageUUID,
         'datetime': datetime.now(),
         'labels': labels
-    })
+    }
 
-    return "Successfully uploaded {0}".format(img.filename)
+    # Store reference and label information of image in Google Firestore
+    photoFeedRef.document(imageUUID).set(imgInf)
+
+    return imgInf
 
 
 def getLabels(URI):
